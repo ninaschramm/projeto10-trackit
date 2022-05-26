@@ -41,11 +41,14 @@ export default function Habits() {
     }
 
     useEffect(() => {const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`, {headers});
-    promise.then (response => setHabitsList(response.data))
-
-    console.log(habitsList)
-    if (habitsList.length !== 0) {setShowHabits(true)}
+    promise.then (response => handleHabitList(response.data))
 }, [])
+
+    function handleHabitList(data) {
+        setHabitsList(data)
+        console.log(habitsList)
+        if (habitsList.length !== 0) {setShowHabits(true)}
+    }
 
     function handleSelection(target) {
         let index = target.id - 1;
@@ -78,7 +81,7 @@ export default function Habits() {
         promise.catch(err => console.log(err.response.data.message))
     }
 
-    function posted(response) {
+    function posted(response    ) {
         console.log(response)
         setHabitName("")
         setNewHabit(false)
@@ -87,7 +90,8 @@ export default function Habits() {
             i.status = "notSelected"
         }
         setDays(newDays)
-        navigate('/habitos')
+        const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`, {headers});
+        promise.then (response => handleHabitList(response.data))
     }
 
 
@@ -101,7 +105,13 @@ export default function Habits() {
             </Days>
             <Checkout><span onClick={() => setNewHabit(false)}>Cancelar</span>
             <button onClick={() => addHabit()}>Salvar</button></Checkout></NewHabit> : "" }
-            { showHabits ? "LISTA" : <NoHabits>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</NoHabits> }
+            { showHabits ? 
+            <div>{habitsList.map(habit => <Habit><span>{habit.name}</span>
+            <Days> 
+                {days.map(day => <Day color={`${habit.days.includes(day.id)}`} >{day.title}</Day> )}
+            </Days>
+            </Habit>)}</div>
+            : <NoHabits>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</NoHabits> }
         </Container >
     )
     
@@ -109,19 +119,27 @@ export default function Habits() {
 
 const handleColor = color => {
     switch (color) {
-      case "selected":
-        return "#FFFFFF";
-      case "notSelected":
-        return "#DBDBDB";
+        case "selected":
+         return "#FFFFFF";
+        case "true":
+            return "#FFFFFF";
+        case "notSelected":
+         return "#DBDBDB";
+        case "false":
+            return "#DBDBDB";
     }
   };
 
   const handleBGColor = color => {
       switch (color) {
         case "selected":
-        return "#CFCFCF";
-      case "notSelected":
-        return "#FFFFFF";
+            return "#CFCFCF";
+        case "notSelected":
+            return "#FFFFFF";
+        case "true":
+            return "#CFCFCF";
+        case "false":
+            return "#FFFFFF";
       }
   }
 
@@ -255,10 +273,10 @@ const Day = styled.div`
     font-weight: 400;
     font-size: 19.976px;
 
-    :hover {
+    /* :hover {
             filter: brightness(90%);
             cursor: pointer;
-            }
+            } */
 
     `
 
@@ -274,4 +292,12 @@ const Checkout = styled.div`
         color: #52B6FF;
         cursor: pointer;
     }
+    `
+
+const Habit = styled.div`
+    width: 340px;
+    height: 91px;
+    background: #FFFFFF;
+    border-radius: 5px;
+    color: black;
     `
