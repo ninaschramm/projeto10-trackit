@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import logo from "./img/logo-grande.png"
 import styled from "styled-components";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import UserContext from "./contexts/UserContext";
 
-export default function SignIn( {setToken} ) {
+export default function SignIn() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
     const navigate = useNavigate();
-
+    const {setToken, setShowHeader} = useContext(UserContext);
+;
     function signInUser(event){ 
         event.preventDefault();
 
@@ -37,6 +39,7 @@ export default function SignIn( {setToken} ) {
 
     return (
         <Container>
+            {setShowHeader(false)}
             <img src={logo} alt="TrackIt" />
             <Form>
                 <form action="#" onSubmit={signInUser}>            

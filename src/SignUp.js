@@ -1,17 +1,18 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import logo from "./img/logo-grande.png"
 import styled from "styled-components";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import UserContext from "./contexts/UserContext";
 
 export default function SignUp() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
-    const [pic, setPic] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
     const navigate = useNavigate();
+    const { pic, setPic } = useContext(UserContext);
 
     function registerUser (event) {
         event.preventDefault();
@@ -25,7 +26,8 @@ export default function SignUp() {
         }
 
         const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", user)
-        promise.then(() => navigate('/'))
+        promise.then(() => navigate('/'), {email: `${email}`,
+        name: `${name}`,})
         promise.catch(err => treatError(err))
     }
 
