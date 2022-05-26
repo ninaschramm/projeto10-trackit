@@ -13,6 +13,7 @@ export default function Header( ) {
     
     const HeaderDiv = styled.div`
         width: 100%;
+        max-width: 390px;
         height: 70px;
         position: fixed;
         z-index: 1;

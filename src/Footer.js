@@ -16,6 +16,7 @@ const Menu = styled.div`
     bottom: 0;
     z-index: 1;
     width: 100%;
+    max-width: 390px;
     height: 70px;
     background: #FFFFFF;
     border: 1px solid black;
