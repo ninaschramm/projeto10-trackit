@@ -2,7 +2,7 @@ import { useState } from "react";
 import logo from "./img/logo-grande.png"
 import styled from "styled-components";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
 
@@ -10,9 +10,12 @@ export default function SignUp() {
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
     const [pic, setPic] = useState("");
+    const [isDisabled, setIsDisabled] = useState(false);
+    const navigate = useNavigate();
 
     function registerUser (event) {
         event.preventDefault();
+        setIsDisabled(true)
 
         const user = {
             email: `${email}`,
@@ -21,11 +24,14 @@ export default function SignUp() {
             password: `${password}`
         }
 
-        console.log(user)
-
         const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", user)
-        promise.then(response => console.log(response))
-        promise.catch(err => console.log(err))
+        promise.then(() => navigate('/'))
+        promise.catch(err => treatError(err))
+    }
+
+    function treatError(err) {
+        alert(`${err.response.data.message} Tente novamente!`)
+        setIsDisabled(false)
     }
 
 
@@ -34,11 +40,11 @@ export default function SignUp() {
             <img src={logo} alt="TrackIt" />
             <Form>
                 <form action="#" onSubmit={registerUser}>            
-                    <input type="email" id="emailInput" placeholder='email' value={email} onChange={(e) => setEmail(e.target.value)} />              
-                    <input type="password" id="passInput" placeholder='senha' value={password} onChange={(e) => setPassword(e.target.value)} />  
-                    <input type="text" id="nameInput" placeholder='nome' value={name} onChange={(e) => setName(e.target.value)} />  
-                    <input type="text" id="CPF" placeholder='foto' value={pic} onChange={(e) => setPic(e.target.value)} />  
-                    <button type="submit">Cadastrar</button>
+                    <input disabled={isDisabled} type="email" id="emailInput" placeholder='email' value={email} required onChange={(e) => setEmail(e.target.value)} />              
+                    <input disabled={isDisabled} type="password" id="passInput" placeholder='senha' value={password} required onChange={(e) => setPassword(e.target.value)} />  
+                    <input disabled={isDisabled} type="text" id="nameInput" placeholder='nome' value={name} required onChange={(e) => setName(e.target.value)} />  
+                    <input disabled={isDisabled} type="text" id="CPF" placeholder='foto' value={pic} required onChange={(e) => setPic(e.target.value)} />  
+                    <button disabled={isDisabled} type="submit">Cadastrar</button>
                 </form>
             </Form>
             <Link to="/">Já tem uma conta? Faça login!</Link>
@@ -119,7 +125,7 @@ const Form = styled.div`
             color: #FFFFFF;
         }
 
-        button:hover {
+        button:hover:enabled {
             filter: brightness(115%);
             cursor: pointer;
             }

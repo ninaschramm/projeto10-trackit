@@ -1,13 +1,17 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Habits() {
+export default function Habits( {token} ) {
 
     const [habitsList, setHabitsList] = useState([])
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
-    const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`);
+    useEffect(() => {const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`, {headers});
     promise.then (response => setHabitsList(response.data))
 
     console.log(habitsList)
-
+}, [])
+    
 }
