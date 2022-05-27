@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 export default function Header( ) {
 
-    const { showHeader, pic } = useContext(UserContext);
+    const { showHeader } = useContext(UserContext);
+    const pic = localStorage.getItem(`locPic`)
     
     return ( 
             <>{ showHeader ? <HeaderDiv><span>Track It</span> <img src={pic} alt="" /></HeaderDiv>  : ""}</>

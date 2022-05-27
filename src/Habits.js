@@ -10,7 +10,8 @@ export default function Habits() {
     const [showHabits, setShowHabits] = useState(false);
     const [newHabit, setNewHabit] = useState(false);
     const [habitName, setHabitName] = useState("");
-    const { token, setShowHeader } = useContext(UserContext);
+    const { setShowHeader } = useContext(UserContext);
+    const token = localStorage.getItem("locToken")
     const navigate = useNavigate();
     const [days, setDays] = useState([
         {title: "D",
@@ -47,12 +48,11 @@ export default function Habits() {
     function handleHabitList(data) {
         setHabitsList(data)
         console.log(habitsList)
-        if (habitsList.length !== 0) {setShowHabits(true)}
+        if (habitsList) {setShowHabits(true)}
     }
 
     function handleSelection(target) {
         let index = target.id - 1;
-        console.log(index)
         let newDays = [...days]
         if (newDays[index].status === "notSelected") {newDays[index].status = "selected"}
         else (newDays[index].status = "notSelected")
@@ -94,6 +94,13 @@ export default function Habits() {
         promise.then (response => handleHabitList(response.data))
     }
 
+    function deleteHabit(id) {
+        console.log(id)
+        const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, {headers});
+        promise.then(() => {const inPromise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`, {headers});
+        inPromise.then (response => handleHabitList(response.data))});
+        promise.catch(err => console.log(err))
+    }
 
     return (
         <Container >
@@ -106,9 +113,9 @@ export default function Habits() {
             <Checkout><span onClick={() => setNewHabit(false)}>Cancelar</span>
             <button onClick={() => addHabit()}>Salvar</button></Checkout></NewHabit> : "" }
             { showHabits ? 
-            <div>{habitsList.map(habit => <Habit><span>{habit.name}</span>
+            <div>{habitsList.map(habit => <Habit><span>{habit.name}</span> <ion-icon name="trash-outline" id={habit.id} onClick={(e) => {deleteHabit(e.target.id)}} ></ion-icon>
             <Days> 
-                {days.map(day => <Day color={`${habit.days.includes(day.id)}`} >{day.title}</Day> )}
+                {days.map(day => <DayTrack color={`${habit.days.includes(day.id)}`} >{day.title}</DayTrack> )}
             </Days>
             </Habit>)}</div>
             : <NoHabits>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</NoHabits> }
@@ -273,12 +280,27 @@ const Day = styled.div`
     font-weight: 400;
     font-size: 19.976px;
 
-    /* :hover {
+    :hover {
             filter: brightness(90%);
             cursor: pointer;
-            } */
+            }
 
     `
+
+const DayTrack = styled.div`
+    width: 30px !important;
+    height: 30px;
+    background: ${({ color }) => handleBGColor(color)};
+    color: ${({ color }) => handleColor(color)};
+    border: 1px solid #D5D5D5;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19.976px; `
 
 const Checkout = styled.div`
     width: 303px;
@@ -300,4 +322,19 @@ const Habit = styled.div`
     background: #FFFFFF;
     border-radius: 5px;
     color: black;
+    font-family: 'Lexend Deca';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19.976px;
+    line-height: 25px;
+    color: #666666;
+    padding: 13px 15px;
+    margin-bottom: 10px;
+    position: relative;
+
+        ion-icon {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
     `

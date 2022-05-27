@@ -11,7 +11,7 @@ export default function SignIn() {
     const [password, setPassword] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
     const navigate = useNavigate();
-    const {setToken, setShowHeader} = useContext(UserContext);
+    const {token, setToken, setShowHeader, setPic} = useContext(UserContext);
 ;
     function signInUser(event){ 
         event.preventDefault();
@@ -28,7 +28,11 @@ export default function SignIn() {
     }
 
     function login(response) {
+        console.log(response)
+        setPic(response.data.image)
         setToken(response.data.token)
+        localStorage.setItem(`locToken`, `${response.data.token}`)
+        localStorage.setItem(`locPic`, `${response.data.image}`)
         navigate('/habitos')
     }
 
