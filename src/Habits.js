@@ -45,6 +45,11 @@ export default function Habits() {
     promise.then (response => handleHabitList(response.data))
 }, [])
 
+    function reload() {
+        const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`, {headers});
+        promise.then (response => handleHabitList(response.data))
+    }
+
     function handleHabitList(data) {
         setHabitsList(data)
         console.log(habitsList)
@@ -97,8 +102,7 @@ export default function Habits() {
     function deleteHabit(id) {
         console.log(id)
         const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, {headers});
-        promise.then(() => {const inPromise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`, {headers});
-        inPromise.then (response => handleHabitList(response.data))});
+        promise.then(reload());
         promise.catch(err => console.log(err))
     }
 
@@ -336,5 +340,6 @@ const Habit = styled.div`
             position: absolute;
             right: 10px;
             top: 10px;
+            cursor: pointer;
         }
     `

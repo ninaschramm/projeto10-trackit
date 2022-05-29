@@ -15,7 +15,7 @@ export default function Today() {
     let day = `${weekDays[d.getDay()]} ${d.getDate()}/${d.getMonth()}`;
     const token = localStorage.getItem("locToken");
     const [todayList, setTodayList] = useState([]);
-    const [status, setStatus] = useState(false);
+    const [percent, setPercent] = useState("");
 
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -33,40 +33,40 @@ function handleList(response) {
     console.log(response.data)
 }
 
-function handleCheckList() {
-    setStatus("true")
-    const newList = [...todayList]
-    setTodayList(newList)
+function reload() {
+    const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today`, {headers});
+    promise.then (response => handleList(response))
 }
 
 function checkHabit(target) {
     console.log(target)
     let id = target.id
     const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, { }, {headers: headers});
-    promise.then(handleCheckList());
+    promise.then(reload())    ;
 }
 
-function calcHabits(){
-    let den = todayList.length;
+useEffect (() => {let den = todayList.length;
     let num = 0;
     for (let i of todayList) {
         if (i.done == true) {num += 1}
     }
-    return (num/den)
-}
+    let n = num/den * 100;
+    let fixed = n.toFixed(0);
+    setPercent(`${fixed}`)})
+
 
     return (
         <Container>
             {setShowHeader(true)}
             <Title>
                <h1>{day}</h1> 
-               {calcHabits() ? "{calcHabits}" : "Nenhum hábito concluído hoje"}
+               {percent != "0" ? <div  style={{color: "#8FC549"}}>{percent}% dos hábitos concluídos</div> : <div color="zero">"Nenhum hábito concluído hoje"</div> }
               
             </Title>
           {todayList.map(habit => <Habit>   <div><h1>{habit.name}</h1> <br></br>
-                Sequência atual: 3 dias <br></br>
-                Seu recorde: 5 dias</div>
-                <Check color={status ? "true" : `${habit.done}`} id={habit.id} onClick={(e) => {checkHabit(e.currentTarget)}} ><img src={checkMark} alt="check" /></Check>
+                Sequência atual: <span style={{color: "#8FC549"}}>{habit.currentSequence} {habit.currentSequence === 1 ? "dia" : "dias"}</span><br></br>
+                Seu recorde: <span color={`${habit.currentSequence === habit.highestSequence}`} >{habit.highestSequence} {habit.highestSequence === 1 ? "dia" : "dias"}</span></div>
+                <Check color={`${habit.done}`} id={habit.id} onClick={(e) => {checkHabit(e.currentTarget)}} ><img src={checkMark} alt="check" /></Check>
             </Habit>)}
             
         </Container>
@@ -80,6 +80,8 @@ const handleColor = color => {
          return "#8FC549";        
         case "false":
             return "#EBEBEB";
+        case "zero":
+            return "#BABABA";
     }
   };
 
@@ -110,7 +112,6 @@ const Habit = styled.div`
     font-size: 12.976px;
     line-height: 16px;
     color: #666666;
-    color: #666666;
     padding: 13px 15px;
     margin-bottom: 10px;
     position: relative;
@@ -120,6 +121,7 @@ const Habit = styled.div`
     h1 {
         font-size: 19.976px;
     }
+
     `
 
     const Check = styled.div` 
@@ -146,7 +148,6 @@ const Habit = styled.div`
     padding-top: 28px;
     font-size: 17.976px;
     line-height: 22px;
-    color: #BABABA;
     
     h1 {
         font-size: 22.976px;
