@@ -224,7 +224,7 @@ const NewHabit = styled.div`
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        padding-top: 18px;
+        padding: 18px 0 10px;
 
         button {
             height: 35px;

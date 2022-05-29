@@ -12,7 +12,7 @@ export default function Today() {
     const { setShowHeader } = useContext(UserContext);
     const weekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
     const d = new Date();
-    let day = `${weekDays[d.getDay()]} ${d.getDate()}/${d.getMonth()}`;
+    let day = `${weekDays[d.getDay()]}, ${d.getDate()}/0${d.getMonth()}`;
     const token = localStorage.getItem("locToken");
     const [todayList, setTodayList] = useState([]);
     const [percent, setPercent] = useState("");
@@ -39,10 +39,15 @@ function reload() {
 }
 
 function checkHabit(target) {
-    console.log(target)
     let id = target.id
-    const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, { }, {headers: headers});
-    promise.then(reload())    ;
+    if (target.classList.contains("false")) {
+        const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, { }, {headers: headers});
+        promise.then(reload());
+    }
+    else {
+        const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, { }, {headers: headers});
+        promise.then(reload());
+    }   
 }
 
 useEffect (() => {let den = todayList.length;
@@ -63,10 +68,10 @@ useEffect (() => {let den = todayList.length;
                {percent != "0" ? <div  style={{color: "#8FC549"}}>{percent}% dos hábitos concluídos</div> : <div style={{color: "#BABABA"}}>Nenhum hábito concluído hoje</div> }
               
             </Title>
-          {todayList.map(habit => <Habit>   <div><h1>{habit.name}</h1> <br></br>
+          {todayList.map((habit, value) => <Habit key={value}>   <div><h1>{habit.name}</h1> <br></br>
                 Sequência atual: <span style={{color: habit.done ? "#8FC549" : "#666666"}}>{habit.currentSequence} {habit.currentSequence === 1 ? "dia" : "dias"}</span><br></br>
                 Seu recorde: <span style={{color: habit.currentSequence == habit.highestSequence ? "#8FC549" : "#666666"}} >{habit.highestSequence} {habit.highestSequence === 1 ? "dia" : "dias"}</span></div>
-                <Check color={`${habit.done}`} id={habit.id} onClick={(e) => {checkHabit(e.currentTarget)}} ><img src={checkMark} alt="check" /></Check>
+                <Check color={`${habit.done}`} className={`${habit.done}`} id={habit.id} onClick={(e) => {checkHabit(e.currentTarget)}} ><img src={checkMark} alt="check" /></Check>
             </Habit>)}
             
         </Container>
@@ -146,6 +151,7 @@ const Habit = styled.div`
     width: 340px;
     height: 94px;
     padding-top: 28px;
+    margin-bottom: 25px;
     font-size: 17.976px;
     line-height: 22px;
     color: ${({ color }) => handleColor(color)};
