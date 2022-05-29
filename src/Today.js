@@ -60,12 +60,12 @@ useEffect (() => {let den = todayList.length;
             {setShowHeader(true)}
             <Title>
                <h1>{day}</h1> 
-               {percent != "0" ? <div  style={{color: "#8FC549"}}>{percent}% dos hábitos concluídos</div> : <div color="zero">"Nenhum hábito concluído hoje"</div> }
+               {percent != "0" ? <div  style={{color: "#8FC549"}}>{percent}% dos hábitos concluídos</div> : <div style={{color: "#BABABA"}}>Nenhum hábito concluído hoje</div> }
               
             </Title>
           {todayList.map(habit => <Habit>   <div><h1>{habit.name}</h1> <br></br>
-                Sequência atual: <span style={{color: "#8FC549"}}>{habit.currentSequence} {habit.currentSequence === 1 ? "dia" : "dias"}</span><br></br>
-                Seu recorde: <span color={`${habit.currentSequence === habit.highestSequence}`} >{habit.highestSequence} {habit.highestSequence === 1 ? "dia" : "dias"}</span></div>
+                Sequência atual: <span style={{color: habit.done ? "#8FC549" : "#666666"}}>{habit.currentSequence} {habit.currentSequence === 1 ? "dia" : "dias"}</span><br></br>
+                Seu recorde: <span style={{color: habit.currentSequence == habit.highestSequence ? "#8FC549" : "#666666"}} >{habit.highestSequence} {habit.highestSequence === 1 ? "dia" : "dias"}</span></div>
                 <Check color={`${habit.done}`} id={habit.id} onClick={(e) => {checkHabit(e.currentTarget)}} ><img src={checkMark} alt="check" /></Check>
             </Habit>)}
             
@@ -148,6 +148,7 @@ const Habit = styled.div`
     padding-top: 28px;
     font-size: 17.976px;
     line-height: 22px;
+    color: ${({ color }) => handleColor(color)};
     
     h1 {
         font-size: 22.976px;
