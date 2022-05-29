@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "./contexts/UserContext";
+import checkMark from "./img/Vector.png"
 
 
 export default function Today() {
@@ -11,15 +12,16 @@ export default function Today() {
     const { setShowHeader } = useContext(UserContext);
     const weekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
     const d = new Date();
-    let day = `${weekDays[d.getDay()]} ${d.getDate()}/${d.getMonth()}`
-    const token = localStorage.getItem("locToken")
-    const [todayList, setTodayList] = useState([])
+    let day = `${weekDays[d.getDay()]} ${d.getDate()}/${d.getMonth()}`;
+    const token = localStorage.getItem("locToken");
+    const [todayList, setTodayList] = useState([]);
+    const [status, setStatus] = useState(false);
 
     const headers = {
         Authorization: `Bearer ${token}`,
     }
 
-    const body = null;
+    const body = { };
     
 
     useEffect(() => {const promise = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today`, {headers});
@@ -31,8 +33,17 @@ function handleList(response) {
     console.log(response.data)
 }
 
-function checkHabit(id) {
-    const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, {}, {headers: headers})
+function handleCheckList() {
+    setStatus("true")
+    const newList = [...todayList]
+    setTodayList(newList)
+}
+
+function checkHabit(target) {
+    console.log(target)
+    let id = target.id
+    const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, { }, {headers: headers});
+    promise.then(handleCheckList());
 }
 
 function calcHabits(){
@@ -49,13 +60,13 @@ function calcHabits(){
             {setShowHeader(true)}
             <Title>
                <h1>{day}</h1> 
-               {calcHabits() ? "" : "Nenhum hábito concluído hoje"}
+               {calcHabits() ? "{calcHabits}" : "Nenhum hábito concluído hoje"}
               
             </Title>
           {todayList.map(habit => <Habit>   <div><h1>{habit.name}</h1> <br></br>
                 Sequência atual: 3 dias <br></br>
                 Seu recorde: 5 dias</div>
-                <Check color={`${habit.done}`} id={habit.id} onClick={(e) => {checkHabit(e.target.id)}} ><ion-icon name="checkmark-outline"></ion-icon></Check>
+                <Check color={status ? "true" : `${habit.done}`} id={habit.id} onClick={(e) => {checkHabit(e.currentTarget)}} ><img src={checkMark} alt="check" /></Check>
             </Habit>)}
             
         </Container>

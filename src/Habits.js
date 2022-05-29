@@ -15,25 +15,25 @@ export default function Habits() {
     const navigate = useNavigate();
     const [days, setDays] = useState([
         {title: "D",
-        id: 1,
+        id: 0,
         status: "notSelected",},
         {title: "S",
-        id: 2,
+        id: 1,
         status: "notSelected",},
         {title: "T",
+        id: 2,
+        status: "notSelected",},
+        {title: "Q",
         id: 3,
         status: "notSelected",},
         {title: "Q",
         id: 4,
         status: "notSelected",},
-        {title: "Q",
+        {title: "S",
         id: 5,
         status: "notSelected",},
         {title: "S",
         id: 6,
-        status: "notSelected",},
-        {title: "S",
-        id: 7,
         status: "notSelected",},
     ])
 
@@ -52,7 +52,7 @@ export default function Habits() {
     }
 
     function handleSelection(target) {
-        let index = target.id - 1;
+        let index = target.id;
         let newDays = [...days]
         if (newDays[index].status === "notSelected") {newDays[index].status = "selected"}
         else (newDays[index].status = "notSelected")
