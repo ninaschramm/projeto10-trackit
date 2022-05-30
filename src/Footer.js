@@ -2,14 +2,32 @@ import { useContext } from "react";
 import UserContext from "./contexts/UserContext";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { render } from "react-dom";
+import {
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+  buildStyles
+} from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 export default function Footer( ) {
 
-    const { showHeader, pic } = useContext(UserContext);
+    const { showHeader, pic, percent } = useContext(UserContext);
     
     return (
         <>{ showHeader ? <Menu>
-            <Link to="/hoje"><Hoje>Hoje</Hoje></Link>
+            <Link to="/hoje"><Hoje> 
+                <CircularProgressbar 
+                value={percent} text={"Hoje"} 
+                background
+                backgroundPadding={6}
+                styles={buildStyles({
+                  backgroundColor: "#52B6FF",
+                  textColor: "#fff",
+                  pathColor: "#fff",
+                  trailColor: "transparent"
+                })}
+                /></Hoje></Link>
             <ContDiv><Link to="/habitos">Hábitos</Link> <Link to="/historico">Histórico</Link></ContDiv>
             
         </Menu> : ""}</>

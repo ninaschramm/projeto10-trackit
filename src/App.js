@@ -17,11 +17,12 @@ import Footer from "./Footer";
 
 function App() {
 
-
+  
   const [token, setToken] = useState("");
   const [pic, setPic] = useState("");
   const [showHeader, setShowHeader] = useState("");
-  const contextValue = { token, setToken, pic, setPic, showHeader, setShowHeader };
+  const [percent, setPercent] = useState("");
+  const contextValue = { token, setToken, pic, setPic, showHeader, setShowHeader, percent, setPercent };
 
   return (
     <UserContext.Provider value={ contextValue } >

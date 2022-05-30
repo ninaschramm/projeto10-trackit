@@ -9,13 +9,13 @@ import checkMark from "./img/Vector.png"
 export default function Today() {
 
 
-    const { setShowHeader } = useContext(UserContext);
+    const { setShowHeader, percent, setPercent } = useContext(UserContext);
     const weekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
     const d = new Date();
     let day = `${weekDays[d.getDay()]}, ${d.getDate()}/0${d.getMonth()}`;
     const token = localStorage.getItem("locToken");
     const [todayList, setTodayList] = useState([]);
-    const [percent, setPercent] = useState("");
+
 
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -42,12 +42,13 @@ function checkHabit(target) {
     let id = target.id
     if (target.classList.contains("false")) {
         const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`, { }, {headers: headers});
-        promise.then(reload());
+        promise.then(setTimeout(reload, 200));
     }
     else {
         const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`, { }, {headers: headers});
-        promise.then(reload());
+        promise.then(setTimeout(reload, 200));
     }   
+    
 }
 
 useEffect (() => {let den = todayList.length;
