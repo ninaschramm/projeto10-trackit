@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 import UserContext from "./contexts/UserContext";
 import checkMark from "./img/Vector.png"
 
@@ -11,10 +11,9 @@ export default function Today() {
 
     const { setShowHeader, percent, setPercent } = useContext(UserContext);
     const weekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
-    const d = new Date();
-    let day = `${weekDays[d.getDay()]}, ${d.getDate()}/0${d.getMonth()}`;
     const token = localStorage.getItem("locToken");
     const [todayList, setTodayList] = useState([]);
+    let day = `${weekDays[dayjs().format('d')]}, ${dayjs().format('DD/MM')}`;
 
 
     const headers = {
@@ -30,7 +29,6 @@ export default function Today() {
 
 function handleList(response) {
     setTodayList(response.data)
-    console.log(response.data)
 }
 
 function reload() {
