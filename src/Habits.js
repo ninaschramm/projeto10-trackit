@@ -104,9 +104,9 @@ export default function Habits() {
         const answer = window.confirm("Você tem certeza que deseja apagar este hábito?")
         if (answer) {
         const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, {headers});
-        promise.then();
+        promise.then(setTimeout(reload, 200));
         promise.catch(err => console.log(err))
-        reload()}
+        }
     }
 
     return (
