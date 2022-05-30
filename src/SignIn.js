@@ -14,7 +14,7 @@ export default function SignIn() {
     const navigate = useNavigate();
     const {token, setToken, setShowHeader, setPic} = useContext(UserContext);
     const [loading, setLoading] = useState(false);
-;
+
     function signInUser(event){ 
         event.preventDefault();
         setLoading(true)
@@ -54,12 +54,12 @@ export default function SignIn() {
                 <form action="#" onSubmit={signInUser}>            
                     <input required disabled={isDisabled} type="email" id="emailInput" placeholder='email' value={email} onChange={(e) => setEmail(e.target.value)} />              
                     <input required disabled={isDisabled} type="password" id="passInput" placeholder='senha' value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <button type="submit">
+                    <button disabled={isDisabled} type="submit">
                         { loading ? 
                           <div className="loader">
                           <ThreeDots
                           color="#FFFFFF" />
-                      </div> :
+                        </div> :
                         "Entrar" }
                         </button>
                 </form>
@@ -142,9 +142,10 @@ const Form = styled.div`
             color: #FFFFFF;
         }
 
-        button:hover {
+        button:hover:enabled {
             filter: brightness(115%);
             cursor: pointer;
             }
+
     }
 `
