@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import './css/reset.css';
+import Loader from "react-loader-spinner";
+
 
 import UserContext from "./contexts/UserContext";
 import { useState } from "react";

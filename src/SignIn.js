@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "./contexts/UserContext";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function SignIn() {
 
@@ -12,9 +13,12 @@ export default function SignIn() {
     const [isDisabled, setIsDisabled] = useState(false);
     const navigate = useNavigate();
     const {token, setToken, setShowHeader, setPic} = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
 ;
     function signInUser(event){ 
         event.preventDefault();
+        setLoading(true)
+        setIsDisabled(true)
 
         const user = {
             email: `${email}`,
@@ -33,12 +37,13 @@ export default function SignIn() {
         setToken(response.data.token)
         localStorage.setItem(`locToken`, `${response.data.token}`)
         localStorage.setItem(`locPic`, `${response.data.image}`)
-        navigate('/habitos')
+        navigate('/hoje')
     }
 
     function treatError(err) {
         alert(`${err.response.data.message}`)
         setIsDisabled(false)
+        setLoading(false)
     }
 
     return (
@@ -49,7 +54,14 @@ export default function SignIn() {
                 <form action="#" onSubmit={signInUser}>            
                     <input required disabled={isDisabled} type="email" id="emailInput" placeholder='email' value={email} onChange={(e) => setEmail(e.target.value)} />              
                     <input required disabled={isDisabled} type="password" id="passInput" placeholder='senha' value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <button type="submit">Entrar</button>
+                    <button type="submit">
+                        { loading ? 
+                          <div className="loader">
+                          <ThreeDots
+                          color="#FFFFFF" />
+                      </div> :
+                        "Entrar" }
+                        </button>
                 </form>
             </Form>
             <Link to="/cadastro">Não tem uma conta? Cadastre-se!</Link>

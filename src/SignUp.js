@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "./contexts/UserContext";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function SignUp() {
 
@@ -12,11 +13,13 @@ export default function SignUp() {
     const [name, setName] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
     const navigate = useNavigate();
-    const { pic, setPic } = useContext(UserContext);
+    const { pic, setPic, setShowHeader } = useContext(UserContext);
+    const [loading, setLoading] = useState(false)
 
     function registerUser (event) {
         event.preventDefault();
         setIsDisabled(true)
+        setLoading(true)
 
         const user = {
             email: `${email}`,
@@ -34,11 +37,13 @@ export default function SignUp() {
     function treatError(err) {
         alert(`${err.response.data.message} Tente novamente!`)
         setIsDisabled(false)
+        setLoading(false)
     }
 
 
     return (
         <Container>
+            {setShowHeader(false)}
             <img src={logo} alt="TrackIt" />
             <Form>
                 <form action="#" onSubmit={registerUser}>            
@@ -46,7 +51,11 @@ export default function SignUp() {
                     <input disabled={isDisabled} type="password" id="passInput" placeholder='senha' value={password} required onChange={(e) => setPassword(e.target.value)} />  
                     <input disabled={isDisabled} type="text" id="nameInput" placeholder='nome' value={name} required onChange={(e) => setName(e.target.value)} />  
                     <input disabled={isDisabled} type="text" id="CPF" placeholder='foto' value={pic} required onChange={(e) => setPic(e.target.value)} />  
-                    <button disabled={isDisabled} type="submit">Cadastrar</button>
+                    <button disabled={isDisabled} type="submit">  { loading ? 
+                          <div className="loader">
+                          <ThreeDots
+                          color="#FFFFFF" />
+                      </div> : "Cadastrar" }</button>
                 </form>
             </Form>
             <Link to="/">Já tem uma conta? Faça login!</Link>

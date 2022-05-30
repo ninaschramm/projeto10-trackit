@@ -126,7 +126,6 @@ const Habit = styled.div`
     h1 {
         font-size: 19.976px;
     }
-
     `
 
     const Check = styled.div` 
@@ -140,11 +139,7 @@ const Habit = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-
-    ion-icon {
-        font-size: 50px;
-        color: #FFFFFF;
-    }
+    cursor: pointer;
     `
 
     const Title = styled.div`

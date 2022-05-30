@@ -101,9 +101,12 @@ export default function Habits() {
 
     function deleteHabit(id) {
         console.log(id)
+        const answer = window.confirm("Você tem certeza que deseja apagar este hábito?")
+        if (answer) {
         const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, {headers});
-        promise.then(reload());
+        promise.then();
         promise.catch(err => console.log(err))
+        reload()}
     }
 
     return (
